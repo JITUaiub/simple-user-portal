@@ -38,9 +38,23 @@ class UserController {
             it.flush()
             it.clear()
         }
-
         // Response
         render contentType: "text/json", text: '{"message":"Registration Successful"}'
+    }
+
+    def isEmailExist() {
+        def jsonSlurper = new JsonSlurper()
+        def body = jsonSlurper.parseText(request.reader.text)
+
+        def email = body.email
+
+        def result = User.findByUsername(email)
+
+        if (result == null){
+            render contentType: "text/json", text: '{"message":"Email not Exist"}'
+        }else {
+            render contentType: "text/json", text: '{"message":"Email Exist"}'
+        }
     }
 
 }

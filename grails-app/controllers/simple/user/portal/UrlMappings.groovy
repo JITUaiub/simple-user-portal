@@ -16,5 +16,6 @@ class UrlMappings {
         "/api/user/profile"(controller: "user", action: "profile")
         "/api/admin/getAllUser"(controller: "admin", action: "getAllUser")
         "/registration"(controller: "user", action: "register")
+        "/isEmailExist"(controller: "user", action: "isEmailExist")
     }
 }
