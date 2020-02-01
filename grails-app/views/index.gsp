@@ -1,77 +1,91 @@
 <!doctype html>
-<html>
+<html lang="en">
+
 <head>
-    <meta name="layout" content="main"/>
-    <title>Welcome to Grails</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style type="text/css">
+    html,
+    body {
+        height: 100%;
+    }
+    </style>
+    <title>Login Page</title>
 </head>
+
 <body>
-<content tag="nav">
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Application Status <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li class="dropdown-item"><a href="#">Environment: ${grails.util.Environment.current.name}</a></li>
-            <li class="dropdown-item"><a href="#">App profile: ${grailsApplication.config.grails?.profile}</a></li>
-            <li class="dropdown-item"><a href="#">App version:
-                <g:meta name="info.app.version"/></a>
-            </li>
-            <li role="separator" class="dropdown-divider"></li>
-            <li class="dropdown-item"><a href="#">Grails version:
-                <g:meta name="info.app.grailsVersion"/></a>
-            </li>
-            <li class="dropdown-item"><a href="#">Groovy version: ${GroovySystem.getVersion()}</a></li>
-            <li class="dropdown-item"><a href="#">JVM version: ${System.getProperty('java.version')}</a></li>
-            <li role="separator" class="dropdown-divider"></li>
-            <li class="dropdown-item"><a href="#">Reloading active: ${grails.util.Environment.reloadingAgentEnabled}</a></li>
-        </ul>
-    </li>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Artefacts <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li class="dropdown-item"><a href="#">Controllers: ${grailsApplication.controllerClasses.size()}</a></li>
-            <li class="dropdown-item"><a href="#">Domains: ${grailsApplication.domainClasses.size()}</a></li>
-            <li class="dropdown-item"><a href="#">Services: ${grailsApplication.serviceClasses.size()}</a></li>
-            <li class="dropdown-item"><a href="#">Tag Libraries: ${grailsApplication.tagLibClasses.size()}</a></li>
-        </ul>
-    </li>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Installed Plugins <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <g:each var="plugin" in="${applicationContext.getBean('pluginManager').allPlugins}">
-                <li class="dropdown-item"><a href="#">${plugin.name} - ${plugin.version}</a></li>
-            </g:each>
-        </ul>
-    </li>
-</content>
-
-<div class="svg" role="presentation">
-    <div class="grails-logo-container">
-        <asset:image src="grails-cupsonly-logo-white.svg" class="grails-logo"/>
-    </div>
-</div>
-
-<div id="content" role="main">
-    <section class="row colset-2-its">
-        <h1>Welcome to Grails</h1>
-
-        <p>
-            Congratulations, you have successfully started your first Grails application! At the moment
-            this is the default page, feel free to modify it to either redirect to a controller or display
-            whatever content you may choose. Below is a list of controllers that are currently deployed in
-            this application, click on each to execute its default action:
-        </p>
-
-        <div id="controllers" role="navigation">
-            <h2>Available Controllers:</h2>
-            <ul>
-                <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-                    <li class="controller">
-                        <g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link>
-                    </li>
-                </g:each>
-            </ul>
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="text-center">
+            <i class="fa fa-address-book" style="font-size:40px"></i>
+            <h3>Login Panel</h3>
+            <div class="p-4 border border-dark">
+                <h5>Email Address</h5>
+                <input type="email" class="form-control border-dark" id="email">
+                <h5 class="mt-3">Password</h5>
+                <input type="password" class="form-control border-dark" id="password">
+                <div class="p-4">
+                    <button id="btnLogin" class="mr-4 pl-4 pr-4 btn btn-light border-dark shadow">Login</button>
+                    <button type="reset" class="ml-4 pl-4 pr-4 btn btn-light border-dark shadow">Clear</button>
+                </div>
+                <h6 class="">Are you new here? <a href="/registration">Register Now</a></h6>
+            </div>
         </div>
-    </section>
+    </div>
+    <p class="greeting-id">The ID is </p>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script type="application/javascript">
+    $("#btnLogin").click(function () {
+        var username=$("#email").val();
+        var password=$("#password").val();
+
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "http://localhost:8000/api/login",
+            contentType: "application/json;charset=UTF-8",
+            data:JSON.stringify({"username":username ,"password" : password}),
+            dataType: "json",
+            async: false,
+            error: function (request) {
+                console.log("Login Failed");
+            },
+            success: function (data) {
+                //Save Token
+                localStorage.setItem("token", data.access_token);
+                window.location.href = "http://localhost:8000/profile"
+            }
+        })
+        $.ajax({
+            cache: true,
+            type: "GET",
+            url: "http://localhost:8000/api/user/profile",
+            contentType: "application/json;charset=UTF-8",
+            headers: {"Authorization": "Bearer " + localStorage.getItem('token')},
+            dataType: "json",
+            async: false,
+            error: function (request) {
+                console.log("Connection error.");
+            },
+            success: function (data) {
+                localStorage.setItem("user-name", data.lastName + ", " + data.firstName)
+            }
+        })
+    });
+</script>
 
 </body>
+
 </html>
