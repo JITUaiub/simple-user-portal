@@ -17,7 +17,8 @@ class UserController {
 
     @Secured("ROLE_USER")
     def profile() {
-        def res = userService.profile("jitu@bm.com")
+        User loggedUser = springSecurityService.currentUser
+        def res = userService.profile(loggedUser.username)
         render res as JSON
     }
 
