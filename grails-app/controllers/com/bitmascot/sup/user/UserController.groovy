@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat
 class UserController {
 
     def userService
+    def springSecurityService
+    def passwordEncoder
 
     @Secured("ROLE_USER")
     def profile() {
@@ -54,6 +56,24 @@ class UserController {
             render contentType: "text/json", text: '{"message":"Email not Exist"}'
         }else {
             render contentType: "text/json", text: '{"message":"Email Exist"}'
+        }
+    }
+
+    @Secured("ROLE_USER")
+    def changePassword() {
+        def jsonSlurper = new JsonSlurper()
+        def body = jsonSlurper.parseText(request.reader.text)
+
+        User loggedUser = springSecurityService.currentUser
+
+        if (!springSecurityService.passwordEncoder.matches(body.currentPass, loggedUser.getPassword())) {
+            render contentType: "text/json", text: '{"message":"Current Password Not Correct."}'
+        }else if(body.newPass == body.confirmPass) {
+            User user = springSecurityService.currentUser
+            user.password = body.newPass
+            user.save(flush: true)
+
+            render contentType: "text/json", text: '{"message":"Password Changed."}'
         }
     }
 
