@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="p-4">
-                    <button type="submit" class="mr-4 pl-4 pr-4 btn btn-light border-dark shadow">Register</button>
+                    <button id="btnRegistration" type="submit" class="mr-4 pl-4 pr-4 btn btn-light border-dark shadow">Register</button>
                     <button id="btnReset" type="reset" class="ml-4 pl-4 pr-4 btn btn-light border-dark shadow">Cancel</button>
                 </div>
             </div>
@@ -74,12 +74,43 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <script type="application/javascript">
+    $("#btnRegistration").click(function () {
+        var firstName=$("#firstName").val();
+        var lastName=$("#lastName").val();
+        var address=$("#address").val();
+        var phone=$("#phone").val();
+        var email=$("#email").val();
+        var birthDate=$("#birthDate").val();
+        var password=$("#password").val();
+        alert(birthDate)
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "http://localhost:8000/registration",
+            contentType: "application/json;charset=UTF-8",
+            data:JSON.stringify({"firstName":firstName ,"lastName" : lastName, "address" : address, "phone":phone ,"email" : email, "password" : password, "birthDate":birthDate}),
+            dataType: "json",
+            async: false,
+            error: function (request) {
+                console.log("Registration Failed");
+            },
+            success: function (data) {
+                console.log(data.message)
+                //window.location.href = "http://localhost:8000/profile"
+            }
+        })
+
+        function updateUser(data){
+            document.getElementById("user-name").innerHTML = localStorage.getItem("user-name")
+        }
+    });
     $("#btnReset").click(function () {
         cancel();
     });
