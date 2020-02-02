@@ -13,6 +13,21 @@
     body {
         height: 100%;
     }
+    .button {
+        display: inline-block;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: black;
+        border: 1.5px solid black;
+        box-shadow: 2.5px 2.5px black;
+    }
+
+    .button:active {
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
     </style>
     <title>Login Page</title>
 </head>
@@ -29,8 +44,8 @@
                 <h5 class="mt-3">Password</h5>
                 <input type="password" class="form-control border-dark" id="password">
                 <div class="p-4">
-                    <button id="btnLogin" class="mr-4 pl-4 pr-4 btn btn-light border-dark shadow">Login</button>
-                    <button type="reset" class="ml-4 pl-4 pr-4 btn btn-light border-dark shadow">Clear</button>
+                    <button id="btnLogin" class="button mr-5">Login</button>
+                    <button type="reset" class="button">Clear</button>
                 </div>
                 <h6 class="">Are you new here? <a href="http://localhost:8000/registration">Register Now</a></h6>
             </div>
@@ -45,10 +60,41 @@
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js"></script>
+
 <script type="application/javascript">
+    function validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
     $("#btnLogin").click(function () {
         var username=$("#email").val();
         var password=$("#password").val();
+        var notificationObject = {
+            ele: 'body', // which element to append to
+            type: 'danger', // (null, 'info', 'danger', 'success')
+            offset: {from: 'top', amount: 20}, // 'top', or 'bottom'
+            align: 'right', // ('left', 'right', or 'center')
+            width: 'auto', // (integer, or 'auto')
+            delay: 1000, // Time while the message will be displayed. It's not equivalent to the *demo* timeOut!
+            allow_dismiss: true, // If true then will display a cross to close the popup.
+            stackup_spacing: 10 // spacing between consecutively stacked growls.
+        };
+
+        if (username == ""){
+            $.bootstrapGrowl("Please enter an email.", notificationObject);
+            return
+        }
+        if(!validateEmail(username)){
+            $.bootstrapGrowl("Please enter an valid email.", notificationObject);
+            return
+        }
+        if (password == ""){
+            $.bootstrapGrowl("Please enter an password.", notificationObject);
+            return
+        }
+
 
         $.ajax({
             cache: true,
@@ -59,11 +105,13 @@
             dataType: "json",
             async: false,
             error: function (request) {
-                console.log("Login Failed");
+                $.bootstrapGrowl("Email or Password is incorrect. Try again.", notificationObject);
+                return
             },
             success: function (data) {
                 //Save Token
                 localStorage.setItem("token", data.access_token);
+                localStorage.setItem("user-role", data.roles[0]);
                 redirect(data.roles[0]);
             }
         })
@@ -76,7 +124,7 @@
             dataType: "json",
             async: false,
             error: function (request) {
-                console.log("Connection error.");
+
             },
             success: function (data) {
                 localStorage.setItem("user-name", data.firstName)

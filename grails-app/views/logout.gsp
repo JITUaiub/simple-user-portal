@@ -25,6 +25,7 @@
             success: function (data) {
                 localStorage.removeItem("token")
                 localStorage.removeItem("user-info")
+                localStorage.removeItem("user-role")
                 window.location.href = "http://localhost:8000/"
             }
         })

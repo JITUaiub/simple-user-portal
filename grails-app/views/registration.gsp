@@ -13,6 +13,21 @@
     body {
         height: 100%;
     }
+    .button {
+        display: inline-block;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: black;
+        border: 1.5px solid black;
+        box-shadow: 2.5px 2.5px black;
+    }
+
+    .button:active {
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
     </style>
     <title>Registration Page</title>
 </head>
@@ -42,7 +57,7 @@
                 </div>
                 <div class="row pb-2">
                     <div class="col-sm-4">Email</div>
-                    <div class="col-sm-8"><input type="email" class="input-sm border-dark" id="email"></div>
+                    <div class="col-sm-8"><input type="email" class="input-sm border-dark" id="email"><div id="isEmailExistFlag"></div></div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4">Birthdate</div>
@@ -63,8 +78,8 @@
                 </div>
 
                 <div class="p-4">
-                    <button id="btnRegistration" type="submit" class="mr-4 pl-4 pr-4 btn btn-light border-dark shadow">Register</button>
-                    <button id="btnReset" type="reset" class="ml-4 pl-4 pr-4 btn btn-light border-dark shadow">Cancel</button>
+                    <button id="btnRegistration" type="submit" class="button ml-4">Register</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button id="btnReset" type="reset" class="button mr-5">Cancel</button>
                 </div>
             </div>
         </div>
@@ -79,8 +94,41 @@
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js"></script>
 
 <script type="application/javascript">
+    $("#email").on('keyup', function () {
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "http://localhost:8000/isEmailExist",
+            contentType: "application/json;charset=UTF-8",
+            data:JSON.stringify({"email" : email}),
+            dataType: "json",
+            async: true,
+            error: function (request) {
+                console.log("Connection error.");
+            },
+            success: function (data) {
+                $("#isEmailExistFlag").html(data.message)
+                if($("#email").val() == ""){
+                    $("#isEmailExistFlag").html("")
+                }
+            }
+        })
+    });
+    var notificationObject = {
+        ele: 'body', // which element to append to
+        type: 'danger', // (null, 'info', 'danger', 'success')
+        offset: {from: 'top', amount: 20}, // 'top', or 'bottom'
+        align: 'right', // ('left', 'right', or 'center')
+        width: 'auto', // (integer, or 'auto')
+        delay: 1000, // Time while the message will be displayed. It's not equivalent to the *demo* timeOut!
+        allow_dismiss: true, // If true then will display a cross to close the popup.
+        stackup_spacing: 10 // spacing between consecutively stacked growls.
+    };
+
     $("#btnRegistration").click(function () {
         var firstName=$("#firstName").val();
         var lastName=$("#lastName").val();
@@ -89,20 +137,58 @@
         var email=$("#email").val();
         var birthDate=$("#birthDate").val();
         var password=$("#password").val();
+        var notificationSuccess = {
+            ele: 'body', // which element to append to
+            type: 'success', // (null, 'info', 'danger', 'success')
+            offset: {from: 'top', amount: 20}, // 'top', or 'bottom'
+            align: 'right', // ('left', 'right', or 'center')
+            width: 'auto', // (integer, or 'auto')
+            delay: 1000, // Time while the message will be displayed. It's not equivalent to the *demo* timeOut!
+            allow_dismiss: true, // If true then will display a cross to close the popup.
+            stackup_spacing: 10 // spacing between consecutively stacked growls.
+        };
+
+        if(firstName == ""){
+            $.bootstrapGrowl("Please enter first name.", notificationObject);
+            return
+        }
+        if(lastName == ""){
+            $.bootstrapGrowl("Please enter last name.", notificationObject);
+            return
+        }
+        if(address == ""){
+            $.bootstrapGrowl("Please enter address.", notificationObject);
+            return
+        }
+        if(phone == ""){
+            $.bootstrapGrowl("Please enter phone.", notificationObject);
+            return
+        }
+        if(email == ""){
+            $.bootstrapGrowl("Please enter email.", notificationObject);
+            return
+        }
+        if(password == ""){
+            $.bootstrapGrowl("Please enter password.", notificationObject);
+            return
+        }
+
         $.ajax({
-            cache: true,
+            cache: false,
             type: "POST",
             url: "http://localhost:8000/register",
             contentType: "application/json;charset=UTF-8",
             data:JSON.stringify({"firstName":firstName ,"lastName" : lastName, "address" : address, "phone":phone ,"email" : email, "password" : password, "birthDate":birthDate}),
             dataType: "json",
             async: false,
-            error: function (request, status, error) {
-                console.log("Registration Failed" + error);
-            },
             success: function (data) {
-                console.log(data.message)
-                //window.location.href = "http://localhost:8000/profile"
+                if(data.message == "Email already in use."){
+                    $.bootstrapGrowl(data.message, notificationObject);
+                    return
+                }
+                var msg = data.message + ". You can login now."
+                $.bootstrapGrowl(msg, notificationSuccess);
+                return
             }
         })
 

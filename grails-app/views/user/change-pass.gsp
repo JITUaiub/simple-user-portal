@@ -101,9 +101,8 @@
 
     <div id="sidebar-wrapper">
         <div align="right" style="background-color: rgba(128, 128, 128, 0.8); border-top: 2px solid black; border-bottom: 2px solid black;"><h1><i><b>Navigation</b></i></h1> </div>
-        <div class="list-group list-group-flush" align="center">
-            <a href="http://localhost:8000/profile" class="list-group-item list-group-item-action">Profile Page</a>
-            <a href="http://localhost:8000/change-password" class="list-group-item list-group-item-action" style="border: 2px solid black;">Change Password</a>
+        <div class="list-group list-group-flush" align="center" id="navMenu">
+
         </div>
     </div>
 
@@ -117,9 +116,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <b style="color: black;"><a href="http://localhost:8000/profile" style="color: black; text-decoration: none;" id="user-name">User Name</a></b>
-                        </a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="http://localhost:8000/change-password">Change password</a>
                             <div class="dropdown-divider"></div>
@@ -129,7 +126,17 @@
                 </ul>
             </div>
         </nav>
-
+        <script type="application/javascript">
+            var role = localStorage.getItem("user-role")
+            if(role == "ROLE_USER"){
+                document.getElementById("navMenu").innerHTML = '<a href="http://localhost:8000/profile" class="list-group-item list-group-item-action">Profile Page</a>\n' +
+                    '            <a href="http://localhost:8000/change-password" class="list-group-item list-group-item-action" style="border: 2px solid black;">Change Password</a>';
+                document.getElementById("navbarDropdown").innerHTML = '<b style="color: black;"><a style="color: black; text-decoration: none;" href="http://localhost:8000/profile" id="user-name">User Name</a></b>'
+            }else if(role == "ROLE_ADMIN"){
+                document.getElementById("navMenu").innerHTML = '<a href="http://localhost:8000/admin" class="list-group-item list-group-item-action" style="border: 2px solid black;">User List</a>'
+                document.getElementById("navbarDropdown").innerHTML = '<b style="color: black;">SUPER ADMIN</b>'
+            }
+        </script>
         <div align="center" style="border-left: 2px solid black; height: 90%;">
             <h1 class="p-4" style="border-bottom: 1.5px solid black;">Change Password</h1>
             <div class="row justify-content-center p-5">
@@ -178,6 +185,8 @@
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js"></script>
 
 <script type="application/javascript">
     $(document).ready(function () {
@@ -200,10 +209,47 @@
     function updateUser(data){
         document.getElementById("user-name").innerHTML = localStorage.getItem("user-name")
     }
+    var notificationObject = {
+        ele: 'body', // which element to append to
+        type: 'danger', // (null, 'info', 'danger', 'success')
+        offset: {from: 'top', amount: 20}, // 'top', or 'bottom'
+        align: 'right', // ('left', 'right', or 'center')
+        width: 'auto', // (integer, or 'auto')
+        delay: 1000, // Time while the message will be displayed. It's not equivalent to the *demo* timeOut!
+        allow_dismiss: true, // If true then will display a cross to close the popup.
+        stackup_spacing: 10 // spacing between consecutively stacked growls.
+    };
+    var notificationSuccess = {
+        ele: 'body', // which element to append to
+        type: 'success', // (null, 'info', 'danger', 'success')
+        offset: {from: 'top', amount: 20}, // 'top', or 'bottom'
+        align: 'right', // ('left', 'right', or 'center')
+        width: 'auto', // (integer, or 'auto')
+        delay: 1000, // Time while the message will be displayed. It's not equivalent to the *demo* timeOut!
+        allow_dismiss: true, // If true then will display a cross to close the popup.
+        stackup_spacing: 10 // spacing between consecutively stacked growls.
+    };
     $("#btnChangePassword").click(function () {
         var currentPass=$("#currentPass").val();
         var newPass=$("#newPass").val();
         var confirmPass=$("#confirmPass").val();
+
+        if(currentPass == ""){
+            $.bootstrapGrowl("Please enter previous password.", notificationObject);
+            return
+        }
+        if(newPass == ""){
+            $.bootstrapGrowl("Please enter new password.", notificationObject);
+            return
+        }
+        if(confirmPass == ""){
+            $.bootstrapGrowl("Enter new password again.", notificationObject);
+            return
+        }
+        if(confirmPass != newPass){
+            $.bootstrapGrowl("Passwords doesn't match.", notificationObject);
+            return
+        }
 
         $.ajax({
             cache: true,
@@ -218,7 +264,7 @@
                 console.log("Login Failed");
             },
             success: function (data) {
-                console.log(data.message)
+                $.bootstrapGrowl(data.message, notificationObject);
                 //window.location.href = "http://localhost:8000/profile"
             }
         })

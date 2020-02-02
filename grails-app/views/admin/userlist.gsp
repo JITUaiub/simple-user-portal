@@ -21,7 +21,6 @@
     body {
         overflow-x: hidden;
     }
-
     #sidebar-wrapper {
         min-height: 100vh;
         margin-left: -15rem;
@@ -81,7 +80,6 @@
     input[type="password"] {
         border: 2px solid black;
     }
-
     .footer {
         position: fixed;
         left: 0;
@@ -131,20 +129,20 @@
         </nav>
 
         <div align="center" style="border-left: 2px solid black; height: 90%;">
-            <nav class="navbar navbar-expand-lg navbar-dark teal lighten-2 mb-4">
-                <label class="font-weight-bold navbar-brand" style="color: black; font-size: 25px;">User List</label>
-                <div class="collapse navbar-collapse" style="border-bottom: black">
-                    <form class="form-inline ml-auto">
-                        <div class="md-form my-0">
-                            <input id="searchBox" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                        </div>
-                    </form>
-                </div>
-            </nav>
-            <hr class="mb-0" style="border-bottom: 1.5px solid black;"/>
-            <div class="row">
-                <div class="col-sm-12" >
-                    <table id="dtUserList" class="table table-striped table-bordered" cellspacing="0" width="100%">
+%{--            <nav class="navbar navbar-expand-lg navbar-dark teal lighten-2 mb-4">--}%
+%{--                <label class="font-weight-bold navbar-brand" style="color: black; font-size: 25px;">User List</label>--}%
+%{--                <div class="collapse navbar-collapse" style="border-bottom: black">--}%
+%{--                    <form class="form-inline ml-auto">--}%
+%{--                        <div class="md-form my-0">--}%
+%{--                            <input id="searchBox" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">--}%
+%{--                        </div>--}%
+%{--                    </form>--}%
+%{--                </div>--}%
+%{--            </nav>--}%
+            <div class="row mt-4">
+                <div class="col-sm-12">
+                    <div class="mb-0 pl-3" style="text-align: left;"><h3>User List</h3></div>
+                    <table id="dtUserList" class="table table-striped table-bordered" cellspacing="0" width="100%" style="border-top: 1.5px solid black;">
                         <thead>
                         <tr>
                             <th class="th-sm">First Name
@@ -198,7 +196,7 @@
         crossorigin="anonymous"></script>
 <script type="application/javascript">
     function fillData(dataString) {
-        $('#dtUserList').DataTable({
+        var table = $('#dtUserList').DataTable({
             data : dataString,
             columns : [
                 { "data" : "firstName" },
@@ -208,6 +206,9 @@
             ],
             paging : false,
             bInfo: false
+        });
+        $("#searchBox").on('keyup', function () {
+            table.search(this.value).draw();
         });
     }
 </script>
