@@ -8,8 +8,15 @@ import com.bitmascot.sup.user.UserInfo
 class BootStrap {
 
     def init = { servletContext ->
+        new UserInfo(firstName: "Md. Nashid Kamal", lastName: "Jitu", address: "Dhaka", phone: "12345", email: "user@localhost.local", birthDate: new Date()).save(flush: true)
+
         def adminRole = new Role('ROLE_ADMIN').save()
+        def userRole = new Role('ROLE_USER').save()
+
+        def testUser = new User('user@localhost.local', 'user').save()
         def adminUser = new User('admin@localhost.local', 'admin').save()
+
+        UserRole.create testUser, userRole
         UserRole.create adminUser, adminRole
 
         UserRole.withSession {
