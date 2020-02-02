@@ -89,17 +89,16 @@
         var email=$("#email").val();
         var birthDate=$("#birthDate").val();
         var password=$("#password").val();
-        alert(birthDate)
         $.ajax({
             cache: true,
             type: "POST",
-            url: "http://localhost:8000/registration",
+            url: "http://localhost:8000/register",
             contentType: "application/json;charset=UTF-8",
             data:JSON.stringify({"firstName":firstName ,"lastName" : lastName, "address" : address, "phone":phone ,"email" : email, "password" : password, "birthDate":birthDate}),
             dataType: "json",
             async: false,
-            error: function (request) {
-                console.log("Registration Failed");
+            error: function (request, status, error) {
+                console.log("Registration Failed" + error);
             },
             success: function (data) {
                 console.log(data.message)

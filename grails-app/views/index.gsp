@@ -32,11 +32,10 @@
                     <button id="btnLogin" class="mr-4 pl-4 pr-4 btn btn-light border-dark shadow">Login</button>
                     <button type="reset" class="ml-4 pl-4 pr-4 btn btn-light border-dark shadow">Clear</button>
                 </div>
-                <h6 class="">Are you new here? <a href="/registration">Register Now</a></h6>
+                <h6 class="">Are you new here? <a href="http://localhost:8000/registration">Register Now</a></h6>
             </div>
         </div>
     </div>
-    <p class="greeting-id">The ID is </p>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -65,7 +64,7 @@
             success: function (data) {
                 //Save Token
                 localStorage.setItem("token", data.access_token);
-                window.location.href = "http://localhost:8000/profile"
+                redirect(data.roles[0]);
             }
         })
         $.ajax({
@@ -80,10 +79,19 @@
                 console.log("Connection error.");
             },
             success: function (data) {
-                localStorage.setItem("user-name", data.lastName + ", " + data.firstName)
+                localStorage.setItem("user-name", data.firstName)
             }
         })
     });
+    function redirect(role) {
+        if(role == "ROLE_USER"){
+            window.location.href = "http://localhost:8000/profile"
+        }else if(role == "ROLE_ADMIN"){
+            window.location.href = "http://localhost:8000/admin"
+        }else {
+            window.location.href = "http://localhost:8000/"
+        }
+    }
 </script>
 
 </body>

@@ -16,7 +16,7 @@ class UrlMappings {
         // API
         "/api/user/profile"(controller: "user", action: "profile")
         "/api/admin/getAllUser"(controller: "admin", action: "getAllUser")
-        "/registration"(controller: "user", action: "register")
+        "/register"(controller: "user", action: "register")
         "/isEmailExist"(controller: "user", action: "isEmailExist")
         "/api/user/change-password"(controller: "user", action: "changePassword")
 
@@ -26,5 +26,7 @@ class UrlMappings {
         "/change-password"(view: "/user/change-pass")
         "/profile"(view: "/user/profile")
         "/user/logout"(view: "/logout")
+
+        "/admin"(view: "/admin/userlist")
     }
 }

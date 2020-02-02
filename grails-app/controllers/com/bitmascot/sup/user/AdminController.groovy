@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat
 class AdminController {
 
     def userService
-    def dateFormat = new SimpleDateFormat("dd/MM/yyyy")
 
     @Secured("ROLE_ADMIN")
     def getAllUser() {
