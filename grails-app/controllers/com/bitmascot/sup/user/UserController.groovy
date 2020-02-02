@@ -68,7 +68,7 @@ class UserController {
         }
     }
 
-    @Secured("ROLE_USER")
+    @Secured(["ROLE_USER", "ROLE_ADMIN"])
     def changePassword() {
         def jsonSlurper = new JsonSlurper()
         def body = jsonSlurper.parseText(request.reader.text)
