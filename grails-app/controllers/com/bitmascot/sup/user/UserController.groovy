@@ -27,6 +27,14 @@ class UserController {
         def jsonSlurper = new JsonSlurper()
         def format = new SimpleDateFormat("yyyy-mm-dd")
         def body = jsonSlurper.parseText(request.reader.text)
+
+        // Check emails
+        UserInfo tmpUser = UserInfo.findByEmail(body.email)
+        if(tmpUser != null){
+            render contentType: "text/json", text: '{"message":"Email already in use."}'
+            return
+        }
+
         def user = new UserInfo(firstName: body.firstName, lastName: body.lastName, address: body.address,
                 phone: body.phone, email: body.email, birthDate: format.parse(body.birthDate))
 
@@ -54,9 +62,9 @@ class UserController {
         def result = User.findByUsername(email)
 
         if (result == null){
-            render contentType: "text/json", text: '{"message":"Email not Exist"}'
+            render contentType: "text/json", text: '{"message":"Email not in use."}'
         }else {
-            render contentType: "text/json", text: '{"message":"Email Exist"}'
+            render contentType: "text/json", text: '{"message":"Email in use."}'
         }
     }
 
@@ -68,7 +76,7 @@ class UserController {
         User loggedUser = springSecurityService.currentUser
 
         if (!springSecurityService.passwordEncoder.matches(body.currentPass, loggedUser.getPassword())) {
-            render contentType: "text/json", text: '{"message":"Current Password Not Correct."}'
+            render contentType: "text/json", text: '{"message":"Incorrect current password."}'
         }else if(body.newPass == body.confirmPass) {
             User user = springSecurityService.currentUser
             user.password = body.newPass
